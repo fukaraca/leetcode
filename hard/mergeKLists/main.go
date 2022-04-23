@@ -46,12 +46,12 @@ func mergeKLists(lists []*ListNode) *ListNode {
 
 	for _, list := range lists {
 		if list != nil {
-			//push only heads. heads are already sorted ascending order beforehand
+			//push only heads. heads are already sorted ascending order
 			heap.Push(&pl, list)
 		}
 	}
 	for pl.Len() > 0 {
-		//it returns smallest valued list always
+		//it returns(pops) smallest valued node always
 		node := heap.Pop(&pl).(*ListNode)
 		if node.Next != nil {
 			//push next node to heap
