@@ -1,0 +1,161 @@
+package main
+
+import (
+	"fmt"
+	"reflect"
+	"sort"
+)
+
+func main() {
+	//[[2,5,2,1,2]
+
+	can := []int{2, 5, 1, 1, 2, 1, 2}
+	target := 5
+	fmt.Println(combinationSum2(can, target))
+
+}
+
+func combinationSum2(candidates []int, target int) [][]int {
+	mapCand := make(map[int]int)
+	for _, candidate := range candidates {
+		mapCand[candidate]++
+	}
+	ret := [][]int{}
+
+	var addNcheck func(c map[int]int, tar, tot int, l []int) bool
+	var liste []int
+	addNcheck = func(c map[int]int, tar, tot int, l []int) bool {
+
+		if tot > tar {
+			return false
+		}
+		if tot == target {
+			return true
+		}
+
+		for k, v := range c {
+			for i := 0; i < v; i++ {
+
+				tot += k
+				l = append(l, k)
+				c[k]--
+
+				if addNcheck(c, tar, tot, l) {
+					sort.Ints(l)
+
+					ok := true
+					for _, ints := range ret {
+						if reflect.DeepEqual(ints, l) {
+							ok = false
+							break
+						}
+					}
+					if ok {
+						ret = append(ret, l)
+					}
+					tot -= k
+					c[k]++
+
+					return false
+
+				} else {
+
+					l = (l)[: len(l)-1 : len(l)-1]
+
+					c[k]++
+					tot -= k
+				}
+			}
+
+		}
+		return false
+	}
+	addNcheck(mapCand, target, 0, liste)
+	return ret
+}
+
+
+
+
+/////
+
+package main
+
+import (
+	"fmt"
+	"reflect"
+	"sort"
+)
+
+func main() {
+	//[[2,5,2,1,2]
+
+	can := []int{2, 5, 1, 1, 2, 1, 2}
+	target := 5
+	fmt.Println(combinationSum2(can, target))
+
+}
+
+func combinationSum2(candidates []int, target int) [][]int {
+	c := make(map[int]int)
+	for _, candidate := range candidates {
+		c[candidate]++
+	}
+	ret := [][]int{}
+	tar := target
+	tot := 0
+	var addNcheck func() bool
+	var l []int
+	addNcheck = func() bool {
+		fmt.Println(tot, l, len(l), cap(l))
+		fmt.Println(ret)
+
+		if tot > tar {
+			return false
+		}
+		if tot == target {
+			return true
+		}
+
+		for k := range c {
+			for i := 0; i < c[k]; i++ {
+				tot += k
+				l = append(l, k)
+				c[k]--
+				if addNcheck() {
+					temp := make([]int, len(l))
+					copy(temp, l) //this is necessary to prevent trimming len(l) while re-ordered
+					sort.Ints(temp)
+
+					ok := true
+					for _, ints := range ret {
+						if reflect.DeepEqual(ints, temp) {
+							ok = false
+							break
+						}
+					}
+					if ok {
+						ret = append(ret, temp)
+
+					}
+					l = l[: len(l)-1 : len(l)-1]
+					tot -= k
+					//	c[k]++
+
+					return false
+
+				}
+
+				l = l[: len(l)-1 : len(l)-1]
+
+				//c[k]++
+				tot -= k
+
+			}
+
+		}
+		return false
+	}
+	addNcheck()
+	return ret
+}

@@ -35,7 +35,7 @@ func combinationSum(candidates []int, target int) [][]int {
 			return true
 		}
 
-		for _, candidate := range candidates {
+		for _, candidate := range c {
 			if len(l) != 0 && candidate < l[len(l)-1] {
 				continue
 			}
