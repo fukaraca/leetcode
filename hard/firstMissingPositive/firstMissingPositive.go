@@ -16,25 +16,24 @@ func main() {
 
 }
 
+//o(3n)~> o(n) time
 func firstMissingPositive(nums []int) int {
 	l := len(nums)
-	//make all negatives zero
+
 	for i := 0; i < l; i++ {
 		if nums[i] < 0 {
 			nums[i] = 0
 		}
 	}
-	//save all existed values to indices as negative, save all zeros to beyond length
+
 	for i := 0; i < l; i++ {
 		if val := abs(nums[i]); val != 0 && val <= l {
 			if nums[val-1] > 0 {
 				nums[val-1] = -nums[val-1]
 			} else if nums[val-1] == 0 {
-
 				nums[val-1] = -(l + 1)
 			}
 		}
-
 	}
 	ind := 1
 	for ; ind <= l; ind++ {
