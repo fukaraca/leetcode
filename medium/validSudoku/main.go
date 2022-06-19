@@ -25,10 +25,12 @@ func main() {
 		}
 
 	}
-	fmt.Println(bytArr)
+	for _, bytes := range bytArr {
+		fmt.Println(bytes)
+	}
 	fmt.Println(isValidSudoku(bytArr))
 }
-func isValidSudoku(board [][]byte) bool {
+func isValidSudoku1(board [][]byte) bool {
 	verArr := make([]map[byte]struct{}, 9)
 	//ver := make(map[byte]struct{})
 	for i := 0; i < 9; i++ {
@@ -63,6 +65,38 @@ func isValidSudoku(board [][]byte) bool {
 			}
 		}
 
+	}
+	return true
+}
+
+func isValidSudoku(board [][]byte) bool {
+	hor := make(map[int]map[byte]struct{})
+	ver := make(map[int]map[byte]struct{})
+	ssq := make(map[[2]int]map[byte]struct{})
+
+	for i := 0; i < len(board); i++ {
+		hor[i] = make(map[byte]struct{})
+		for j := 0; j < len(board[0]); j++ {
+			if ver[j] == nil {
+				ver[j] = make(map[byte]struct{})
+			}
+			v := board[i][j]
+			if v == 46 {
+				continue
+			}
+			_, ok1 := hor[i][v]
+			_, ok2 := ver[j][v]
+			if ssq[[2]int{i / 3, j / 3}] == nil {
+				ssq[[2]int{i / 3, j / 3}] = make(map[byte]struct{})
+			}
+			_, ok3 := ssq[[2]int{i / 3, j / 3}][v]
+			if ok1 || ok2 || ok3 {
+				return false
+			}
+			hor[i][v] = struct{}{}
+			ver[j][v] = struct{}{}
+			ssq[[2]int{i / 3, j / 3}][v] = struct{}{}
+		}
 	}
 	return true
 }
