@@ -28,14 +28,14 @@ func multiply(num1 string, num2 string) string {
 
 	for i := l2 - 1; i >= 0; i-- {
 		temp := []uint8{}
-		leftover := 0
+		carry := 0
 		for j := l1 - 1; j >= 0; j-- {
-			mul := leftover + int(num2[i]-'0')*int(num1[j]-'0')
+			mul := carry + int(num2[i]-'0')*int(num1[j]-'0')
 			temp = append(temp, uint8(mul%10))
-			leftover = mul / 10
+			carry = mul / 10
 		}
-		if leftover != 0 {
-			temp = append(temp, uint8(leftover))
+		if carry != 0 {
+			temp = append(temp, uint8(carry))
 		}
 		for k, m := 0, len(temp)-1; k < m; k, m = k+1, m-1 {
 			temp[k], temp[m] = temp[m], temp[k]
@@ -64,17 +64,20 @@ func multiply(num1 string, num2 string) string {
 					t = append(t, last...)
 					last = t
 				}
-				a := len(last) - 1 - j - 1
-				for carry > 0 && a >= 0 {
-					fmt.Println(last, carry, a)
-					last[a] += carry
-					carry = last[a] / 10
-					a -= 1
-				}
 
+				for a := len(last) - 1 - j - 1; carry > 0 && a >= 0; a-- {
+					t := last[a] + carry
+					last[a] = t % 10
+					carry = t / 10
+					if a == 0 && carry > 0 {
+						t1 := []uint8{0}
+						t1 = append(t1, last...)
+						last = t1
+						a++
+					}
+				}
 			}
 		}
-
 	}
 
 	var ret strings.Builder
