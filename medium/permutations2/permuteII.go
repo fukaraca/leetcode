@@ -4,9 +4,8 @@ import (
 	"fmt"
 )
 
-//not solved yet
 func main() {
-	nums := []int{1, 1, 3, 4}
+	nums := []int{3, 3, 0, 3}
 	fmt.Println(permuteUnique(nums))
 }
 
@@ -15,29 +14,26 @@ func permuteUnique(nums []int) [][]int {
 		return [][]int{{nums[0]}}
 	}
 	var ret [][]int
-
-	var dfs func(x, y []int, mp map[int]int)
 	used := make(map[int]int)
+	var dfs func(y []int, mp map[int]int)
 	for _, num := range nums {
 		used[num]++
 	}
-	dfs = func(list, path []int, used map[int]int) {
+	dfs = func(path []int, used map[int]int) {
 		if len(path) == len(nums) {
 			ret = append(ret, path)
 			return
 		}
-		for n, counter := range used {
-			for i := counter; i >= 0; i-- {
-				used[n]++
+		for n, v := range used {
+			if v > 0 {
 				path = append(path, n)
-				dfs(list, append([]int{}, path...), used)
-				path = path[:len(path)-1]
 				used[n]--
+				dfs(append([]int{}, path...), used)
+				used[n]++
+				path = path[:len(path)-1]
 			}
 		}
 	}
-
-	dfs(nums, []int{}, used)
-
+	dfs([]int{}, used)
 	return ret
 }
