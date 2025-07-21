@@ -6,7 +6,9 @@ func main() {
 	a := "({[)"
 	b := "[]()[]"
 	c := "{[]}"
+	fmt.Println('(', ')', '{', '}', '[', ']')
 	fmt.Println(isValid(a), isValid(b), isValid(c))
+	fmt.Println(isValid2(a), isValid2(b), isValid2(c))
 
 }
 
@@ -49,4 +51,19 @@ func isValid(s string) bool {
 		}
 	}
 	return !open
+}
+
+func isValid2(s string) bool {
+	var p = map[int32]int32{'}': '{', ')': '(', ']': '['}
+	var st []int32
+
+	for _, i := range s {
+		if len(st) > 0 && p[i] == st[len(st)-1] {
+			st = st[:len(st)-1]
+			continue
+		}
+		st = append(st, i)
+	}
+
+	return len(st) == 0
 }

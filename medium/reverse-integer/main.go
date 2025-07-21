@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
+	"math"
 )
 
 func main() {
@@ -11,28 +10,22 @@ func main() {
 }
 
 func reverse(x int) int {
-	pol := -1
-	if x == 0 {
-		return 0
-	} else if x < 0 {
-		x = -x
-	} else {
-		pol = 1
-	}
+	var out int
+	p := func() int {
+		if x >= 0 {
+			return 1
+		}
+		return -1
+	}()
 
-	str := strconv.Itoa(x)
-
-	sb := strings.Builder{}
-	for i := len(str) - 1; i >= 0; i-- {
-		sb.WriteString(string(str[i]))
+	for x != 0 {
+		r := x % 10
+		x /= 10
+		if (p > 0 && (math.MaxInt32-r)/10 >= out) || (p < 0 && (math.MinInt32-r)/10 <= out) {
+			out = out*10 + r
+		} else {
+			return 0
+		}
 	}
-	sayi, err := strconv.Atoi(sb.String())
-	if err != nil {
-		panic(err)
-	}
-	if (pol < 0 && sayi > (2147483648)) || (pol > 0 && sayi > 2147483647) {
-		return 0
-	}
-
-	return pol * sayi
+	return out
 }

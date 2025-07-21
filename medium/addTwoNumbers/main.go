@@ -1,4 +1,14 @@
-package addTwoNumbers
+package main
+
+import "fmt"
+
+func main() {
+	n1 := []int{2, 4, 3}
+	n2 := []int{5, 6, 4}
+	l1, l2 := generate(n1), generate(n2)
+	fmt.Println(addTwoNumbersTwo(l1, l2))
+
+}
 
 type ListNode struct {
 	Val  int
@@ -55,4 +65,49 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 		ret = ret.Next
 	}
 	return head
+}
+
+func addTwoNumbersTwo(l1 *ListNode, l2 *ListNode) *ListNode {
+	out := &ListNode{}
+	var elde int
+	t := out
+	for l1 != nil || l2 != nil || elde != 0 {
+		if l1 != nil {
+			t.Val += l1.Val
+			l1 = l1.Next
+		}
+		if l2 != nil {
+			t.Val += l2.Val
+			l2 = l2.Next
+		}
+		t.Val += elde
+		elde = t.Val / 10
+		t.Val %= 10
+
+		t.Next = func() *ListNode {
+			if l1 != nil || l2 != nil || elde != 0 {
+				return new(ListNode)
+			}
+			return nil
+		}()
+		t = t.Next
+	}
+	return out
+}
+
+func generate(list []int) *ListNode {
+	var out *ListNode
+	for i := len(list) - 1; i >= 0; i-- {
+		out = &ListNode{
+			Val: list[i],
+			Next: func() *ListNode {
+				if out == nil {
+					return nil
+				}
+				t := *out
+				return &t
+			}(),
+		}
+	}
+	return out
 }
