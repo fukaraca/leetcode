@@ -1,4 +1,10 @@
-package lengthOfLongestSubstring
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println(lengthOfLongestSubstring2("abcacbcd"))
+}
 
 func lengthOfLongestSubstring(s string) int {
 	start := 0
@@ -25,4 +31,22 @@ func lengthOfLongestSubstring(s string) int {
 		max = len(s) - start
 	}
 	return max
+}
+
+func lengthOfLongestSubstring2(s string) int {
+	var maks, base int
+	m := make(map[uint8]int)
+	for i := range s {
+		if v, ok := m[s[i]]; ok {
+			for ; base <= v; base++ {
+				delete(m, s[base])
+			}
+		}
+
+		m[s[i]] = i
+		if maks < len(m) {
+			maks = len(m)
+		}
+	}
+	return maks
 }
