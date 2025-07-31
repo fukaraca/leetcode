@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	fmt.Println(convert("merhabalar", 4))
+	fmt.Println(convert2("PAYPALISHIRING", 4))
 }
 
 func convert(s string, numRows int) string {
@@ -63,5 +63,36 @@ func convert(s string, numRows int) string {
 		//sb.WriteString("\n")
 	}
 
+	return sb.String()
+}
+
+func convert2(s string, numRows int) string {
+	lines := make([]string, numRows)
+	var backward bool
+	var lidx int
+
+	for i := range s {
+		lines[lidx] += string(s[i])
+
+		switch {
+		case backward:
+			if lidx > 0 {
+				lidx--
+				continue
+			}
+			lidx++
+			backward = false
+		case lidx < numRows-1:
+			lidx++
+		default:
+			lidx--
+			backward = true
+		}
+
+	}
+	var sb strings.Builder
+	for i := range lines {
+		sb.WriteString(lines[i])
+	}
 	return sb.String()
 }
